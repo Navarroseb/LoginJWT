@@ -47,7 +47,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				};
 
 				try {
-					const resp = await fetch("https://3001-4geeksacade-reactflaskh-gtwssatsc1m.ws-us43.gitpod.io/api/token", opts);
+					const resp = await fetch("https://3001-4geeksacade-reactflaskh-gtwssatsc1m.ws-us44.gitpod.io/api/token", opts);
 					if (resp.status !== 200) {
 						alert("Try again");
 						return false;
@@ -64,8 +64,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			getMessage: () => {
+				const store = getStore();
+				const opts = {
+					headers: {
+						Authorization: "Bearer " + store.token
+					}
+				}
 				// fetching data from the backend
-				fetch(process.env.BACKEND_URL + "/api/token")
+				fetch("https://3001-4geeksacade-reactflaskh-gtwssatsc1m.ws-us44.gitpod.io/api/hello", opts)
 					.then(resp => resp.json())
 					.then(data => setStore({ message: data.message }))
 					.catch(error => console.log("Error loading message from backend", error));
