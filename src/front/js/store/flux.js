@@ -1,6 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			token: null,
 			message: null,
 			demo: [
 				{
@@ -21,9 +22,50 @@ const getState = ({ getStore, getActions, setStore }) => {
 				getActions().changeColor(0, "green");
 			},
 
+			syncTokenFromSessionStore: () => {
+				const token = sessionStorage.getItem("token");
+				console.log("Apllication loaded");
+				if (token && token != "" && token != undefined) setStore({ token: token });
+			},
+
+			logout: () => {
+				sessionStorage.removeItem("token");
+				console.log("Peace out!");
+				setStore({ token: null });
+			},
+
+			login: async (email, password) => {
+				const opts = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						email: email,
+						password: password
+					})
+				};
+
+				try {
+					const resp = await fetch("https://3001-4geeksacade-reactflaskh-gtwssatsc1m.ws-us43.gitpod.io/api/token", opts);
+					if (resp.status !== 200) {
+						alert("Try again");
+						return false;
+					}
+
+					const data = await resp.json();
+					console.log("Message from the backend", data);
+					sessionStorage.setItem("token", data.acces_token);
+					setStore({ token: data.acces_token })
+					return true;
+				} catch (error) {
+					console.error("There is an error");
+				}
+			},
+
 			getMessage: () => {
 				// fetching data from the backend
-				fetch(process.env.BACKEND_URL + "/api/hello")
+				fetch(process.env.BACKEND_URL + "/api/token")
 					.then(resp => resp.json())
 					.then(data => setStore({ message: data.message }))
 					.catch(error => console.log("Error loading message from backend", error));
