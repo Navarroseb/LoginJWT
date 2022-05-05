@@ -11,7 +11,6 @@ export const Login = () => {
     const [password, setPassword] = useState("");
     const history = useHistory();
 
-    const token = sessionStorage.getItem("token");
     console.log("This is your token", store.token);
     const handleClick = () => {
         actions.login(email, password)
@@ -31,15 +30,15 @@ export const Login = () => {
                             placeholder="Email"
                             className="input1"
                             value={email}
-                            onChange={e => setEmail(e.target.value)}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <input
                             type="password"
                             id="password"
-                            placeholder="Create a new password"
+                            placeholder="Password"
                             className="input2"
                             value={password}
-                            onChange={e => setPassword(e.target.value)}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                         <button onClick={handleClick}>Login!</button>
 

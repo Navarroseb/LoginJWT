@@ -11,9 +11,6 @@ from flask_jwt_extended import jwt_required
 
 api = Blueprint('api', __name__)
 
-app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET')
-jwt = JWTManager(app)
-
 @api.route("/token", methods=["POST"])
 def create_token():
     email = request.json.get("email", None)
