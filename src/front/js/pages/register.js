@@ -5,21 +5,25 @@ import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 
 
-export const Registerform = () => {
+export function Registerform() {
+    const { store, actions } = useContext(Context)
     const [form, setForm] = useState({
-        email: "",
-        password: ""
+        email: '',
+        password: ''
     })
+    useEffect(() => {
+        console.log(form)
+    }, [form])
 
     return (
         <div className="text-center mt-5">
             <div>
+                <h1>Registro</h1>
                 <input
                     type="email"
                     id="email"
                     placeholder="Email"
                     className="input1"
-                    value={email}
                     onChange={(e) => setForm({
                         email: e.target.value,
                         password: form.password
@@ -31,14 +35,13 @@ export const Registerform = () => {
                     id="password"
                     placeholder="Password"
                     className="input2"
-                    value={password}
                     onChange={(e) => setForm({
                         email: form.email,
                         password: e.target.value
                     })
                     }
                 />
-                <button onClick={handleClick}>Login!</button>
+                <button onClick={() => { actions.registrar(form) }} >Registrar!</button>
 
             </div>
 

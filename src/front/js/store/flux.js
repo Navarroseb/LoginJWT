@@ -17,6 +17,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 			]
 		},
 		actions: {
+			registrar: (form) => {
+				console.log("Hola desde Flux", form)
+				var myHeaders = new Headers();
+				myHeaders.append("Content-Type", "application/json");
+
+				var raw = JSON.stringify(form);
+
+				var requestOptions = {
+					method: "POST",
+					headers: myHeaders,
+					body: raw,
+					redirect: "follow",
+				};
+
+				fetch("https://3001-navarroseb-loginjwt-j7ond8sp574.ws-us44.gitpod.io/api/register", requestOptions)
+					.then((response) => response.text())
+					.then((result) => alert("Registrado con éxito" + result.email))
+					.catch((error) => console.log("error", error));
+
+			},
 			// Use getActions to call a function within a fuction
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
