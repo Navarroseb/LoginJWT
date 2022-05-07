@@ -16,7 +16,7 @@ export const Login = () => {
         actions.login(email, password)
     };
 
-    if (store.token && store.token != "" && store.token != undefined) history.push("/");
+    if (store.token && store.token != "" && store.token != undefined) history.push("/demo");
 
 
     return (

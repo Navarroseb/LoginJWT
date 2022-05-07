@@ -31,8 +31,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					redirect: "follow",
 				};
 
-				fetch("https://3001-navarroseb-loginjwt-31stwxgue4b.ws-us44.gitpod.io/api/register", requestOptions)
-					.then((response) => response.text())
+				fetch("https://3001-navarroseb-loginjwt-brf43riq1r7.ws-us44.gitpod.io/api/register", requestOptions)
+
+					.then((response) => response.json())
 					.then((result) => alert("Registrado con éxito" + result.email))
 					.catch((error) => console.log("error", error));
 
@@ -67,7 +68,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				};
 
 				try {
-					const resp = await fetch("https://3001-navarroseb-loginjwt-31stwxgue4b.ws-us44.gitpod.io/api/token", opts);
+					const resp = await fetch
+						("https://3001-navarroseb-loginjwt-brf43riq1r7.ws-us44.gitpod.io/api/token", opts);
 					if (resp.status !== 200) {
 						alert("Try again");
 						return false;
@@ -75,8 +77,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					const data = await resp.json();
 					console.log("Message from the backend", data);
-					sessionStorage.setItem("token", data.access_token);
-					setStore({ token: data.access_token })
+					sessionStorage.setItem("token", data.Token);
+					setStore({ token: data.Token })
 					return true;
 				} catch (error) {
 					console.error("There is an error");
@@ -84,18 +86,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			getMessage: () => {
-				const store = getStore();
-				const opts = {
-					headers: {
-						Authorization: "Bearer " + store.token
-					}
-				}
+				let token = sessionStorage.getItem("token");
+				var myHeaders = new Headers();
+				myHeaders.append("Authorization", `Bearer ${token}`);
+
+				var requestOptions = {
+					method: "GET",
+					headers: myHeaders,
+					redirect: "follow",
+				};
 				// fetching data from the backend
-				fetch("https://3001-navarroseb-loginjwt-31stwxgue4b.ws-us44.gitpod.io/api/privada", opts)
-					.then(resp => resp.json())
-					.then(data => setStore({ message: data.message }))
-					.catch(error => console.log("Error loading message from backend", error));
+				fetch("https://3001-navarroseb-loginjwt-brf43riq1r7.ws-us44.gitpod.io/api/privada", requestOptions)
+					.then((response) => response.json())
+					.then((result) => {
+						if (result.usuario != undefined) {
+							setStore({ logged: true });
+							console.log(getStore());
+						}
+					})
+					.catch((error) => console.log("error!!!!", error));
 			},
+
 			changeColor: (index, color) => {
 				//get the store
 				const store = getStore();
