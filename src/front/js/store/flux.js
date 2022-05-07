@@ -31,7 +31,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					redirect: "follow",
 				};
 
-				fetch("https://3001-navarroseb-loginjwt-j7ond8sp574.ws-us44.gitpod.io/api/register", requestOptions)
+				fetch("https://3001-navarroseb-loginjwt-31stwxgue4b.ws-us44.gitpod.io/api/register", requestOptions)
 					.then((response) => response.text())
 					.then((result) => alert("Registrado con éxito" + result.email))
 					.catch((error) => console.log("error", error));
@@ -67,7 +67,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				};
 
 				try {
-					const resp = await fetch("https://3001-4geeksacade-reactflaskh-gtwssatsc1m.ws-us44.gitpod.io/api/token", opts);
+					const resp = await fetch("https://3001-navarroseb-loginjwt-31stwxgue4b.ws-us44.gitpod.io/api/token", opts);
 					if (resp.status !== 200) {
 						alert("Try again");
 						return false;
@@ -91,7 +91,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				}
 				// fetching data from the backend
-				fetch("https://3001-4geeksacade-reactflaskh-gtwssatsc1m.ws-us44.gitpod.io/api/hello", opts)
+				fetch("https://3001-navarroseb-loginjwt-31stwxgue4b.ws-us44.gitpod.io/api/privada", opts)
 					.then(resp => resp.json())
 					.then(data => setStore({ message: data.message }))
 					.catch(error => console.log("Error loading message from backend", error));

@@ -8,6 +8,7 @@ from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
+import datetime
 
 api = Blueprint('api', __name__)
 
@@ -28,7 +29,7 @@ def register():
 
 @api.route('/user', methods=['GET','POST'])
 def handle_hello():
-    #cuando es un get conseguiremos todos los usuarios 
+     
     if request.method =='GET':
         all_people = User.query.all()
         all_people = list(map(lambda x: x.serialize(), all_people))
@@ -36,14 +37,14 @@ def handle_hello():
         return jsonify(all_people), 200
     
     else:
-        body = request.get_json() # obtener el request body de la solicitud
+        body = request.get_json() 
         if body is None:
             return "The request body is null", 400
         if 'email' not in body:
             return 'Especificar email', 400
         if 'password' not in body:
             return 'Especificar password',400
-        #estoy consultando si existe alguien con el email que mande en la api y consigo la primera coincidencia
+        
         onePeople = User.query.filter_by(email=body["email"]).first()
         if onePeople:
             if (onePeople.password == body["password"] ):
@@ -62,31 +63,37 @@ def handle_hello():
             return(jsonify({"mensaje":"mail no se encuentra registrado"}))    
 
 
+@api.route("/token", methods=['POST'])
+def iniciar_sesion():
+    
+    data = request.get_json()
+    oneUser = User.query.filter_by(email=data['email'], password= data['password']).first()
+    if(oneUser):
+        expiracion  = datetime.timedelta(minutes=1)
+        acceso = create_access_token(identity=oneUser.email, expires_delta=expiracion)
+        response = {"Token":acceso , "expiracion":expiracion.total_seconds(), "email":oneUser.email}
+
+        return jsonify(response)
+    else:
+        return "mail o contraseña no son válidos"    
 
 
-""" @api.route("/token", methods=["POST"])
-def create_token():
-    email = request.json.get("email", None)
+@api.route("/privada", methods=["GET"])
+@jwt_required()
+def get_privada():
+
+    token = get_jwt_identity()
+    return jsonify({
+        "mensaje": "Acceso concedido",
+        "usuario": token
+    })
+
+    
+    """ email = request.json.get("email", None)
     password = request.json.get("password", None)
-    if email != "test" or password != "test":
+    if email != 'email' or password != 'password':
         return jsonify({"msg": "Bad email or password"}), 401
 
     access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token) 
+    return jsonify(access_token=access_token) """
 
-
-@api.route("/hello", methods=["GET"])
-@jwt_required()
-def get_hello():
-
-    email = get_jwt_identity()
-    dictionary = {
-        "message": "Finally!!! " + email
-    }
-    
-
-    return jsonify(dictionary)  """   
-
-    
-
-   
